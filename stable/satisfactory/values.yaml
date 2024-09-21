@@ -1,0 +1,54 @@
+image:
+  repository: wolveix/satisfactory-server
+  pullPolicy: IfNotPresent
+  tag: v1.8.6@sha256:4af56d4b47277094a1a8bcd095be6e6ad5a324475d35b51e4c9fc59982c7628d
+persistence:
+  config:
+    enabled: true
+    mountPath: "/config"
+  tmp-dumps:
+    enabled: true
+    type: emptyDir
+    mountPath: "/tmp/dumps"
+service:
+  main:
+    enabled: true
+    ports:
+      main:
+        enabled: true
+        port: 7777
+        protocol: tcp
+      mainudp:
+        enabled: true
+        port: "{{ .Values.service.main.ports.main.port }}"
+        protocol: udp
+portal:
+  open:
+    enabled: false
+securityContext:
+  container:
+    runAsNonRoot: false
+    readOnlyRootFilesystem: false
+    runAsUser: 0
+    runAsGroup: 0
+workload:
+  main:
+    podSpec:
+      containers:
+        main:
+          env:
+            AUTOSAVENUM: 5
+            DEBUG: false
+            DISABLESEASONALEVENTS: false
+            LOG: false
+            MAXOBJECTS: 2162688
+            MAXPLAYERS: 4
+            MAXTICKRATE: 30
+            ROOTLESS: false
+            SERVERGAMEPORT: "{{ .Values.service.main.ports.main.port }}"
+            SERVERIP: "0.0.0.0"
+            SERVERSTREAMING: true
+            SKIPUPDATE: false
+            STEAMBETA: false
+            TIMEOUT: 30
+            VMOVERRIDE: false
